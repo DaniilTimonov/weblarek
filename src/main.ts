@@ -51,7 +51,7 @@ console.log(
 );
 
 shoppingModel.removeProductsInCart(productCart2);
-console.log("Товары в корзине 2: ", shoppingModel.getProductsInCart());
+console.log("Корзина после удаления ", shoppingModel.getProductsInCart());
 
 console.log("Количество товаров:", shoppingModel.getProductsInCartCount());
 
@@ -74,11 +74,8 @@ buyerModel.validateBuyerInfo(),
     console.log("Массив данных покупателя: ", buyerModel.getBuyerInfo());
 
 buyerModel.clearBuyerInfo();
+console.log("Модель после очистки: ", buyerModel.getBuyerInfo());
 
-console.log(
-    "Ошибки валидации данных покупателя: ",
-    buyerModel.validateBuyerInfo(),
-);
 //
 
 console.log(API_URL);

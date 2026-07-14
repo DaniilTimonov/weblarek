@@ -21,7 +21,7 @@ export interface IProduct {
 }
 
 export interface IBuyer {
-    payment: TPayment | ""; // Способы оплат (ОНЛАЙН или ОФФЛАЙН)
+    payment: TPayment | null; // Способы оплат (ОНЛАЙН или ОФФЛАЙН)
     address: string; // адрес
     email: string; // почта
     phone: string; //  номер мобильный   

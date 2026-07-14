@@ -4,13 +4,13 @@ import { TPayment } from "../../types/index.ts";
 type CheckErrorBuyer = Partial<Record<keyof IBuyer, string>>;
 
 export class BuyerInfo {
-  private payment: TPayment | ""; //  способ оплаты(онлайн | оффлайн);
+  private payment: TPayment | null; //  способ оплаты(онлайн | оффлайн);
   private address: string; //  адреc покупателя;
   private email: string; //  почта покупателя;
   private phone: string; //  номер телефона покупателя;
 
   constructor() {
-    this.payment = "";
+    this.payment = null;
     this.email = "";
     this.phone = "";
     this.address = "";
@@ -26,13 +26,13 @@ export class BuyerInfo {
   } // получение всех данных покупателя;
 
   clearBuyerInfo(): void {
-    this.payment = "";
+    this.payment = null;
     this.email = "";
     this.phone = "";
     this.address = "";
   } // очистка данных покупателя;
 
-  setPayment(payment: TPayment | ""): void {
+  setPayment(payment: TPayment | null): void {
     this.payment = payment;
   } // сохранение способа оплаты;
 
