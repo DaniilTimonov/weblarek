@@ -98,3 +98,122 @@ Presenter - презентер содержит основную логику п
 `emit<T extends object>(event: string, data?: T): void` - инициализация события. При вызове события в метод передается название события и объект с данными, который будет использован как аргумент для вызова обработчика.  
 `trigger<T extends object>(event: string, context?: Partial<T>): (data: T) => void` - возвращает функцию, при вызове которой инициализируется требуемое в параметрах событие с передачей в него данных из второго параметра.
 
+#### Данные
+
+
+
+#### Слой коммуникации
+Класс Communication
+Класс реализует взаимодействие с сервером через экземпляр класса Api. Позволяет получать список товаров и отправлять данные оформленного заказа.
+
+api: IApi - Хранит объект для выполнения HTTP-запросов к серверу.
+
+#### Конструктор
+constructor(api: IApi) { this.api = api; }
+
+#### Методы
+
+getItems(): Promise<IProductApi> - выполняет GET-запрос на эндпоинт /product через экземпляр класса Api
+
+postOrder(order: IOrder): Promise<IOrderResult> - выполняет POST-запрос на эндпоинт /order. В теле запроса на сервер передаются данные заказа, полученные в параметре order.
+
+#### Модели данных
+Для работы с данными созданы три класса.
+
+Класс ProductCatalog
+Класс отвечает за отображение каталога товаров на главной странице приложения. Класс хранит список доступных товаров и выбранный пользователем товар.
+
+products: IProduct[] - поле хранит массив товаров.
+selectedProduct: IProduct | null - поле хранит товар, выбранный для подробного отображения. Если товар не выбран то будет null.
+events: IEvents- хранит список событий.
+
+ Конструктор
+
+text
+constructor(events: IEvents) {
+    this.products = [];
+    this.selectedProduct = null;
+    this.events = events;
+    }
+ Методы
+setProducts(products: IProduct[]): void - сохранение массива товаров полученного в параметрах метода
+getProducts(): IProduct[] - получение массива товаров из модели;
+getProductsById(id: string): IProduct | undefined - получение одного товара по его id;
+setSelectedProduct(selectedProduct: IProduct): void - сохранение товара для подробного отображения;
+getSelectedProduct(): IProduct - получение товара для подробного отображения;
+
+#### Класс ShoppingСart
+Хранение и управление товарами, выбранными покупателем для покупки.
+
+productsInCart: IProduct[] - хранит массив товаров, выбранных покупателем для покупки.
+events: IEvents- хранит список событий.
+
+Конструктор
+
+text
+
+constructor(events: IEvents) {
+    this.productsInCart = [];
+    this.events = events;
+    }
+ Методы
+getProductsInCart(): IProduct[] - получение массива товаров, которые находятся в корзине;
+addProductsInCart(productsInCart: IProduct): void - добавление товара, который был получен в параметре, в массив корзины;
+removeProductsInCart(productsInCart: IProduct) void - удаление товара, полученного в параметре из массива корзины;
+clearCart(): void - очистка корзины;
+getTotalPriceProductsInCart(): number - получение стоимости всех товаров в корзине;
+getProductsInCartCount(): number - получение количества товаров в корзине;
+hasProductsInCart(id: string): boolean - проверка наличия товара в корзине по его id, полученного в параметр метода.
+
+#### Класс BuyerInfo
+Хранение и управление данными пользователя, необходимыми для оформления заказа.
+
+payment: 'card' | 'cash' | '' - способ оплаты(онлайн | оффлайн);
+adress: string - адреc покупателя;
+email: string - почта покупателя;
+phone: string - номер телефона покупателя;
+events: IEvents- хранит список событий;
+
+Конструктор
+
+text
+
+constructor(events: IEvents) {
+  this.payment = '';
+  this.email = '';
+  this.phone = '';
+  this.address = '';
+  this.events = events;
+}
+Методы
+
+getBuyerInfo() - получение всех данных покупателя;
+removeBuyerInfo() - очистка данных покупателя;
+setPayment(payment: 'card' | 'cash' | ''): void - сохранение способа оплаты;
+setAdress(adress: string): void - сохранение адресса;
+setEmail(email: string):void - сохранение почты;
+setPhone(phone: string):void - сохранение номера телефона;
+type CheckErrorBuyer = Partial<Record<keyof IBuyer, string>>;
+validateBuyerInfo(): CheckErrorBuyer - валидация данных;
+
+Описание интерфейсов данных
+Товар
+text
+
+interface IProduct {
+id: string - Id товара
+title: string - Наименование продукта
+image: string - Изображение продукта
+category: string - Категория продукта(к какой группе она относится)
+price: number | null - Цена продукта(есть или нету)
+description: string - Описание продукта
+}
+Покупатель
+text
+
+interface IBuyer {
+payment: 'card' | 'cash' | '' - Способ оплаты(онлайн | оффлайн)
+adress: string - адрес
+email: string - почта
+phone: string - номер телефона
+}
