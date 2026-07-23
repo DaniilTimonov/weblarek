@@ -1,10 +1,13 @@
 import { IProduct } from "../../types/index.ts";
+import { IEvents } from "../base/Events.ts";
 
 export class ShoppingCart {
   private productsInCart: IProduct[]; // хранит массив товаров, выбранных покупателем для покупки.
+  protected events: IEvents;
 
-  constructor() {
+  constructor(events: IEvents) {
     this.productsInCart = [];
+    this.events = events;
   }
 
   getProductsInCart(): IProduct[] {
@@ -17,16 +20,22 @@ export class ShoppingCart {
     if (!itemInCart) {
       this.productsInCart.push(product);
     }
+
+    this.events.emit("basket:changed");
   } // добавление товара, который был получен в параметре, в массив корзины;
 
   removeProductsInCart(product: IProduct): void {
     this.productsInCart = this.productsInCart.filter(
       (item) => item.id !== product.id,
     );
+
+    this.events.emit("basket:changed");
   } // удаление товара, полученного в параметре из массива корзины;
 
   clearCart(): void {
     this.productsInCart = [];
+
+    this.events.emit("basket:changed");
   } // очистка корзины;
 
   getTotalPriceProductsInCart(): number {

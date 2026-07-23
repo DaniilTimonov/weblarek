@@ -1,3 +1,5 @@
+import { categoryMap } from "./constants";
+
 export function pascalToKebab(value: string): string {
     return value.replace(/([a-z0–9])([A-Z])/g, "$1-$2").toLowerCase();
 }
@@ -73,7 +75,9 @@ export function getObjectProperties(obj: object, filter?: (name: string, prop: P
 }
 
 /**
+ * 
  * Устанавливает dataset атрибуты элемента
+ * 
  */
 export function setElementData<T extends Record<string, unknown> | object>(el: HTMLElement, data: T) {
     for (const key in data) {
@@ -82,7 +86,9 @@ export function setElementData<T extends Record<string, unknown> | object>(el: H
 }
 
 /**
+ * 
  * Получает типизированные данные из dataset атрибутов элемента
+ * 
  */
 export function getElementData<T extends Record<string, unknown>>(el: HTMLElement, scheme: Record<string, Function>): T {
     const data: Partial<T> = {};
@@ -93,11 +99,12 @@ export function getElementData<T extends Record<string, unknown>>(el: HTMLElemen
 }
 
 /**
+ * 
  * Проверка на простой объект
  */
 export function isPlainObject(obj: unknown): obj is object {
     const prototype = Object.getPrototypeOf(obj);
-    return  prototype === Object.getPrototypeOf({}) ||
+    return prototype === Object.getPrototypeOf({}) ||
         prototype === null;
 }
 
@@ -106,16 +113,18 @@ export function isBoolean(v: unknown): v is boolean {
 }
 
 /**
+ * 
  * Фабрика DOM-элементов в простейшей реализации
  * здесь не учтено много факторов
  * в интернет можно найти более полные реализации
+ * 
  */
 export function createElement<
     T extends HTMLElement
-    >(
+>(
     tagName: keyof HTMLElementTagNameMap,
     props?: Partial<Record<keyof T, string | boolean | object>>,
-    children?: HTMLElement | HTMLElement []
+    children?: HTMLElement | HTMLElement[]
 ): T {
     const element = document.createElement(tagName) as T;
     if (props) {
@@ -135,4 +144,15 @@ export function createElement<
         }
     }
     return element;
+}
+
+export function setCategory(element: HTMLElement, value: string) {
+    element.textContent = value;
+    element.classList = "card__category";
+
+    if (value in categoryMap) {
+        element.classList.add(
+            categoryMap[value as keyof typeof categoryMap],
+        );
+    }
 }
